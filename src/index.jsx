@@ -1,24 +1,69 @@
-import {Button, TextView, ScrollView, StackLayout, contentView} from 'tabris';
+import {NavigationView, Page, Button, TextView, ScrollView, StackLayout, ImageView, contentView} from 'tabris';
 
-let answers = initAnswers();
 let questionId = 0;
+let answers = initAnswers();
 let questions = initQuestions();
 let suggestions = initSuggestions();
 let relations = initRelations();
 
 contentView.append(
-  <$>
-    <ScrollView width={300} stretch centerY centerX layout={new StackLayout({alignment: 'stretchX'})} padding={4}>
+  <NavigationView stretch>
+    <InitPage center title="Home Page"/>
+  </NavigationView>
+);
+
+const navigationView = $(NavigationView).only();
+let textViews = contentView.find(TextView);
+let buttons = contentView.find(Button);
+
+/** PAGE FUNCTIONS */
+/** @param {tabris.Attributes<Page>} attributes */
+function InitPage(attributes) {
+  const pageLayout = new StackLayout({alignment: 'stretchX', spacing: 16});
+  return(
+    <Page padding={20} centerY layout={pageLayout} {...attributes}>
+      <ImageView center image='src/img/logo.png' />
+      <TextView font='24px'>Welcome to the FeedExperts app that help you take the correct descisions when it comes to using Tonisity</TextView>
+      <Button onSelect={() => getQuestionPage()}>Start</Button>
+    </Page>
+  )
+}
+
+/** @param {tabris.Attributes<Page>} attributes */
+function QuestionPage(attributes) {
+  const pageLayout = new StackLayout({alignment: 'stretchX'});
+  return(
+    <Page padding={20} layout={pageLayout} {...attributes}>
       <TextView font='24px'></TextView>
       <TextView font='24px' text={questions[questionId]}></TextView>
       <Button centerX value={questionId} onSelect={(event) => showResult(event, 0)}>Yes</Button>
       <Button centerX value={questionId} onSelect={(event) => showResult(event, 1)}>No</Button>
-    </ScrollView>
-  </$>
-);
+    </Page>
+  )
+}
 
-let textViews = contentView.find(TextView);
-let buttons = contentView.find(Button);
+/** DATA PROCESSING FUNCTIONS */
+function getQuestionPage() {
+  resetData();
+  navigationView.append(
+    <QuestionPage title={'Question Page'} />
+  );
+  textViews = contentView.find(TextView);
+  buttons = contentView.find(Button);
+}
+
+function resetData() {
+  questionId = 0;
+  answers = initAnswers();
+}
+
+function setUserAnswer(questionId, answer){
+  answers[questionId] = answer;
+}
+
+function getNextStep(questionId) {
+  return relations[questionId];
+}
 
 function showResult(event, answer) {  
   questionId = event.target.value;
@@ -34,23 +79,18 @@ function showResult(event, answer) {
 
   if (questionId === null){
     //Remove buttons
-    buttons.forEach(element => element.dispose());
+    console.log(buttons);
+    buttons[1].dispose();
+    buttons[2].dispose();
   }
 
-  textViews.first().text = suggestion;
-  textViews.last().text = question;
+  textViews[1].text = suggestion;
+  textViews[2].text = question;
 }
 
+/** INIT FUNCTIONS */
 function initAnswers() {
   return [null, null, null, null, null, null, null, null, null];
-}
-
-function setUserAnswer(questionId, answer){
-  answers[questionId] = answer;
-}
-
-function getNextStep(questionId) {
-  return relations[questionId];
 }
 
 function initQuestions() {

@@ -12,7 +12,7 @@
     "tabris": "~3.3.0"
   },
   "devDependencies": {
-    "tslint": "^6.0.0",
+    "tslint": "^6.1.0",
     "typescript": "~3.3.4000"
   }
 }

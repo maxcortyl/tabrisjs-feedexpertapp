@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="feed.experts" version="0.1.0">
-  <name>Feed-Experts</name>
+<widget id="tonisity" version="0.1.0">
+  <name>Tonisity Total Program</name>
   <description>
-    Example Tabris.js App
+    The Tonisity Total Program App 
   </description>
   <author email="maxime.cortyl@smile.fr">
     Maxime CORTYL

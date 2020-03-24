@@ -9,6 +9,7 @@
     "start": "tabris serve -a -w"
   },
   "dependencies": {
+    "mkdirp": "^1.0.3",
     "tabris": "~3.3.0"
   },
   "devDependencies": {

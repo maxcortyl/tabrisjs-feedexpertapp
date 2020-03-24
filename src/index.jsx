@@ -24,7 +24,7 @@ function InitPage(attributes) {
     <Page padding={20} centerY layout={pageLayout} {...attributes}>
       <ScrollView layoutData='stretchY' layout={pageLayout}>
         <ImageView center image='src/img/logo.png' />
-        <TextView font='24px'>Welcome to the Tonisity app that help you take the correct descisions when it comes to using our product</TextView>
+        <TextView font='24px'>Welcome to the Tonisity app that help you take the correct decisions when it comes to using the Tonisity Total Program</TextView>
         <Button onSelect={() => getQuestionPage()}>Start</Button>
       </ScrollView>
     </Page>
@@ -152,11 +152,11 @@ function initQuestions() {
 
 function initSuggestions() {
   return [
-    'Use Tonisity Px - 3% solution - 500mL/Litter/day - days 2-8 of age',
-    'Use Tonisity Px instead of milk replacer in 1st week with Tonisity PX - 3% solution - 500mL/Litter/day - days 2-8 of age',
-    'Use Tonisity Px - 3% solution - 500mL/Litter on top of creep feed - for the 3 days before weaning',
-    'Use Tonisity Px - 3% solition - 20mL solution per 100g creep feed - for 3 days at initiation of creep feeding then Use Tonisity Px - 3%, Solution - 500mL/Litter on top of creep feed - for the 3 days before weaning',
-    'Use Tonisity Px - 3% solition - 20mL solution per 100g sow\'s feed - for 3 days at initiation of sow\'s feeding then Use Tonisity Px - 3%, Solution - 500mL/Litter on top of sow\'s feed - for the 3 days before weaning',
+    'Use Tonisity Px - 3% solution - 500mL/Litter/day - days 2-8 of age\n',
+    'Use Tonisity Px instead of milk replacer in 1st week with Tonisity PX - 3% solution - 500mL/Litter/day - days 2-8 of age\n',
+    'Use Tonisity Px - 3% solution - 500mL/Litter on top of creep feed - for the 3 days before weaning\n',
+    'Use Tonisity Px - 3% solition - 20mL solution per 100g creep feed - for 3 days at initiation of creep feeding then Use Tonisity Px - 3%, Solution - 500mL/Litter on top of creep feed - for the 3 days before weaning\n',
+    'Use Tonisity Px - 3% solition - 20mL solution per 100g sow\'s feed - for 3 days at initiation of sow\'s feeding then Use Tonisity Px - 3%, Solution - 500mL/Litter on top of sow\'s feed - for the 3 days before weaning\n',
     'Congratulations!!!',
     'Use Tonisity Px - 3% solution - Up to 100 mL/pig/day on top of creep feed or starter feed',
     'Use Tonisity PxW - using medicator pump - Deliver through water lines using 5 days tapering dose on arrival in post-weaning barn'

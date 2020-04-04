@@ -1,4 +1,4 @@
-import {NavigationView, Page, Button, TextView, ScrollView, StackLayout, ImageView, contentView} from 'tabris';
+import {NavigationView, Page, Button, TextView, ScrollView, StackLayout, ImageView, contentView, Picker} from 'tabris';
 
 let questionId = 0;
 let answers = initAnswers();
@@ -15,6 +15,7 @@ contentView.append(
 const navigationView = $(NavigationView).only();
 let textViews = contentView.find(TextView);
 let buttons = contentView.find(Button);
+let pickers = contentView.find(Picker);
 
 /** PAGE FUNCTIONS */
 /** @param {tabris.Attributes<Page>} attributes */
@@ -23,9 +24,10 @@ function InitPage(attributes) {
   return(
     <Page padding={20} centerY layout={pageLayout} {...attributes}>
       <ScrollView layoutData='stretchY' layout={pageLayout}>
-        <ImageView center image='src/img/logo.png' />
+        <ImageView width={200} center image='src/img/logo.png' />
         <TextView font='24px'>Welcome to the Tonisity app that help you take the correct decisions when it comes to using the Tonisity Total Program</TextView>
-        <Button onSelect={() => getQuestionPage()}>Start</Button>
+        <Button onSelect={getQuestionPage}>Start</Button>
+        <Button onSelect={getPreviousResultPage}>Show Previous Results</Button>
       </ScrollView>
     </Page>
   )
@@ -41,18 +43,39 @@ function QuestionPage(attributes) {
         <TextView font='24px' text={questions[questionId]}></TextView>
         <Button centerX value={questionId} onSelect={(event) => showResult(event, 0)}>Yes</Button>
         <Button centerX value={questionId} onSelect={(event) => showResult(event, 1)}>No</Button>
+        <Button centerX onSelect={returnToMainPage}>Return To Main Page</Button>
       </ScrollView>
     </Page>
   )
 }
 
 /** @param {tabris.Attributes<Page>} attributes */
-function ReusultPage(attributes) {
+function ResultPage(attributes) {
+  const pageLayout = new StackLayout({alignment: 'stretchX'});
+  const userCurrentAnswers = getUserAnswers();
+  return(
+    <Page padding={20} layout={pageLayout} {...attributes}>
+      <ScrollView layoutData='stretchY' layout={pageLayout}>
+        <TextView font='24px' text={userCurrentAnswers}></TextView>
+        <Button centerX onSelect={(e) => saveResult(userCurrentAnswers)}>Save Result</Button>
+        <Button centerX onSelect={returnToMainPage}>Return To Main Page</Button>
+      </ScrollView>
+    </Page>
+  )
+}
+
+/** @param {tabris.Attributes<Page>} attributes */
+function PreviousResultPage(attributes) {
   const pageLayout = new StackLayout({alignment: 'stretchX'});
   return(
     <Page padding={20} layout={pageLayout} {...attributes}>
       <ScrollView layoutData='stretchY' layout={pageLayout}>
-        <TextView font='24px' text={getUserAnswers()}></TextView>
+        <Picker message='Previous Results' itemCount={getPreviousResults().length} itemText={(index) => getPreviousResults()[index]}
+                onSelectionIndexChanged={(e) => textViews[1].text = `${localStorage.getItem(getPreviousResults()[e.value])}`} />
+        <TextView font='24px' />
+        <Button centerX onSelect={(e) => clearCurrent(pickers[0].selectionIndex)}>Clear Current Result</Button>
+        <Button centerX onSelect={clearAll}>Clear All Results</Button>
+        <Button centerX onSelect={returnToMainPage}>Return To Main Page</Button>
       </ScrollView>
     </Page>
   )
@@ -70,8 +93,20 @@ function getQuestionPage() {
 
 function getResultPage() {
   navigationView.append(
-    <ReusultPage title={'Result Page'} />
+    <ResultPage title={'Result Page'} />
   );
+}
+
+function getPreviousResultPage() {
+  navigationView.append(
+    <PreviousResultPage title={'Previous Result Page'} />
+  );
+  textViews = contentView.find(TextView);
+  pickers = contentView.find(Picker);
+}
+
+function returnToMainPage() {
+  navigationView.pages().slice(1).dispose();
 }
 
 function resetData() {
@@ -106,8 +141,8 @@ function showResult(event, answer) {
 
   if (questionId === null){
     //Remove buttons
-    buttons[1].text = 'Show your results';
-    buttons[2].dispose();
+    buttons[2].text = 'Show your results';
+    buttons[3].dispose();
   }
 
   textViews[1].text = suggestion;
@@ -129,6 +164,43 @@ function getUserAnswers() {
   });
 
   return userAnswers;
+}
+
+function saveResult(userAnswers) {
+  let time = getTime();
+
+  localStorage.setItem(time, userAnswers);
+  returnToMainPage();
+}
+
+function getPreviousResults() {
+  const keys = [];
+  for (let i = 0; i < localStorage.length; i++) {
+    keys.push(`${localStorage.key(i)}`);
+  }
+
+  return keys;
+}
+
+function getTime() {
+  let today = new Date(),
+      date = today.getFullYear() + '-' + (((today.getMonth()+1) < 10)? '0' : '') + (today.getMonth()+1) + '-' + ((today.getDate() < 10)? '0' : '') + today.getDate(),
+      time = ((today.getHours() < 10)? '0' : '') + today.getHours() + ":" + ((today.getMinutes() < 10)? '0' : '') + today.getMinutes(),
+      dateTime = date + ' ' + time;
+
+  return dateTime;
+}
+
+function clearCurrent(index) {
+  if (index > -1) {
+    localStorage.removeItem(getPreviousResults()[index]);
+    returnToMainPage();
+  }
+}
+
+function clearAll() {
+  localStorage.clear();
+  returnToMainPage();
 }
 
 /** INIT FUNCTIONS */
